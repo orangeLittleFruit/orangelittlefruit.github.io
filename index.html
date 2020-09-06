@@ -21,8 +21,8 @@
     }
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -195,89 +195,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/pig.jpg">
-      <meta itemprop="name" content="橙子和小果">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="橙子和小果">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/" class="post-title-link" itemprop="url">usb gadget configfs 翻译</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-06 16:32:46 / 修改时间：18:49:33" itemprop="dateCreated datePublished" datetime="2020-09-06T16:32:46+08:00">2020-09-06</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文翻译<a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt">Documentation/usb/gadget_configfs.txt</a>文档。主要是讲述如何通过<code>configfs</code>来<strong>配置</strong>USB Gadget的<code>functions</code>。注意：这里使用的是<strong>配置</strong>，也就是要求内核必须存在对应的<code>functions</code>。与<code>ffs</code>的差别是，<code>ffs</code>可以<strong>创建</strong>一个新的<code>functions</code>，内核并不要求事先存在。</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Linux USB Gadget是一个拥有UDC(USB Device Controller)的设备，该设备可以用于连接到USB Host用于扩展额外的功能，比如串口或者大容量存储（MTP）。Android就是一个支持MTP的USB Gadget。当Android手机插入到电脑中（USB Host），电脑可以识别出一个多媒体设备出来。</p>
-<p>USB Host可以通过一些<code>configurations</code>来识别gadget，<code>configuration</code>包括多个<code>interfaces</code>（这里可以理解为USB描述符直接的层级关系）。从gadget的角度来看是<code>functions</code>，每个<code>fcunction</code>代表一种功能，比如串口或者SCSI磁盘。<br>Linux为gadget提供一系列的<code>functions</code>，在<code>drivers/usb/gadget/function/</code>目录中定义。</p>
-<p>创建gadget意味着决定将使用哪些<code>configurations</code>，以及每种<code>configurations</code>将提供的<code>functions</code>，<strong>在这之前是以hardcode的方式在代码中设定的</strong>，比如<code>drivers/usb/gadget/legacy/</code>的gadget都是。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-	  <div>
-      
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/06/usb-gadget-configfs-%E9%AA%8C%E8%AF%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -317,11 +234,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                  <a href="/categories/Linux%E9%A9%B1%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">Linux驱动</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/USB/" itemprop="url" rel="index"><span itemprop="name">USB</span></a>
+                  <a href="/categories/Linux%E9%A9%B1%E5%8A%A8/USB/" itemprop="url" rel="index"><span itemprop="name">USB</span></a>
                 </span>
             </span>
 
@@ -528,7 +445,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -589,12 +506,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">16k</span>
+    <span title="站点总字数">10k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">14 分钟</span>
+    <span title="站点阅读时长">9 分钟</span>
 </div>
 
         
