@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.1.1">
+<script   src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,18 +32,18 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"orange.obey.fun","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="橙子与小果">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://orange.obey.fun/index.html">
 <meta property="og:site_name" content="橙子与小果">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="橙子与小果">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://orange.obey.fun/">
 
 
 <script id="page-configurations">
@@ -100,6 +115,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -124,31 +140,43 @@
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
-
-  </li>
-        <li class="menu-item menu-item-sitemap">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
-
-  </li>
         <li class="menu-item menu-item-about">
 
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -167,7 +195,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/06/usb-gadget-configfs-%E9%AA%8C%E8%AF%81/">
+    <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/pig.jpg">
+      <meta itemprop="name" content="橙子与小果">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="橙子与小果">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/" class="post-title-link" itemprop="url">usb gadget configfs 翻译</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-06 16:32:46 / 修改时间：18:49:33" itemprop="dateCreated datePublished" datetime="2020-09-06T16:32:46+08:00">2020-09-06</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文翻译<a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt">Documentation/usb/gadget_configfs.txt</a>文档。主要是讲述如何通过<code>configfs</code>来<strong>配置</strong>USB Gadget的<code>functions</code>。注意：这里使用的是<strong>配置</strong>，也就是要求内核必须存在对应的<code>functions</code>。与<code>ffs</code>的差别是，<code>ffs</code>可以<strong>创建</strong>一个新的<code>functions</code>，内核并不要求事先存在。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Linux USB Gadget是一个拥有UDC(USB Device Controller)的设备，该设备可以用于连接到USB Host用于扩展额外的功能，比如串口或者大容量存储（MTP）。Android就是一个支持MTP的USB Gadget。当Android手机插入到电脑中（USB Host），电脑可以识别出一个多媒体设备出来。</p>
+<p>USB Host可以通过一些<code>configurations</code>来识别gadget，<code>configuration</code>包括多个<code>interfaces</code>（这里可以理解为USB描述符直接的层级关系）。从gadget的角度来看是<code>functions</code>，每个<code>fcunction</code>代表一种功能，比如串口或者SCSI磁盘。<br>Linux为gadget提供一系列的<code>functions</code>，在<code>drivers/usb/gadget/function/</code>目录中定义。</p>
+<p>创建gadget意味着决定将使用哪些<code>configurations</code>，以及每种<code>configurations</code>将提供的<code>functions</code>，<strong>在这之前是以hardcode的方式在代码中设定的</strong>，比如<code>drivers/usb/gadget/legacy/</code>的gadget都是。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/06/usb-gadget-configfs-%E7%BF%BB%E8%AF%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+	  <div>
+      
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/06/usb-gadget-configfs-%E9%AA%8C%E8%AF%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/pig.jpg">
@@ -190,10 +301,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-09-06 11:18:28 / 修改时间：15:15:05" itemprop="dateCreated datePublished" datetime="2020-09-06T11:18:28+08:00">2020-09-06</time>
+              <time title="创建时间：2020-09-06 11:18:28" itemprop="dateCreated datePublished" datetime="2020-09-06T11:18:28+08:00">2020-09-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-07 11:18:28" itemprop="dateModified" datetime="2020-09-07T11:18:28+08:00">2020-09-07</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -208,7 +325,21 @@
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -225,60 +356,17 @@
 <li>创建gadget：<code>mkdir usb_gadget/g1</code>，创建<code>g1/</code>目录之后，该目录下会生成很多配置目录，这里的<code>g1</code>表示gadget 1，一个UDC对应一个gadget，如果你的SOC上有多个gadget，可以创建多个<code>gx</code>目录。</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ll usb_gadget/g1/</span></span><br><span class="line">total 0</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 UDC</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bDeviceClass</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bDeviceProtocol</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bDeviceSubClass</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bMaxPacketSize0</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bcdDevice</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 bcdUSB</span><br><span class="line">drwxr-xr-x 2 root root    0 1999-11-30 00:02 configs</span><br><span class="line">drwxr-xr-x 2 root root    0 1999-11-30 00:02 functions</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 idProduct</span><br><span class="line">-rw-r--r-- 1 root root 4096 1999-11-30 00:02 idVendor</span><br><span class="line">drwxr-xr-x 2 root root    0 1999-11-30 00:02 os_desc</span><br><span class="line">drwxr-xr-x 2 root root    0 1999-11-30 00:02 strings</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置PID和VID</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> 0x18d1 &gt; usb_gadget/g1/idVendor</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> 0x4ee2 &gt; usb_gadget/g1/idProduct</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建并配置string字目录</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir usb_gadget/g1/strings/0x409</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;123456789&quot;</span> &gt; usb_gadget/g1/strings/0x409/serialnumber</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;xxx&quot;</span> &gt; usb_gadget/g1/strings/0x409/manufacturer</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;xxx_product&quot;</span> &gt; usb_gadget/g1/strings/0x409/product</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建configuration和字符串</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir usb_gadget/g1/configs/c.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> mkdir usb_gadget/g1/configs/c.1/strings/0x409</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;mass_storage&quot;</span> &gt; usb_gadget/g1/configs/c.1/strings/0x409/configuration</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建functions</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> mkdir usb_gadget/g1/<span class="built_in">functions</span>/mass_storage.0</span></span><br><span class="line">[  108.582976]  [1:          mkdir: 1976] Mass Storage Function, version: 2009/09/11</span><br><span class="line">[  108.592679]  [1:          mkdir: 1976] LUN: removable file: (no medium)</span><br></pre></td></tr></table></figure>
-
-<p>这里的<code>mass_storage</code>的名字不能随便起，需要根据insmod的function驱动<code>usb_f_mass_storage.ko</code>来决定。否则会出现如下错误：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1|@android:/config # mkdir usb_gadget/g1/functions/msg.0</span><br><span class="line">mkdir: &#x27;usb_gadget/g1/functions/msg.0&#x27;: No such file or directory</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将functions和configuration关联起来</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ln -s usb_gadget/g1/<span class="built_in">functions</span>/mass_storage.0 usb_gadget/g1/configs/c.1</span></span><br></pre></td></tr></table></figure>
-<p>上述配置之后，得到的结果为：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">127|@android:/config # find .</span><br><span class="line">.</span><br><span class="line">./usb_gadget</span><br><span class="line">./usb_gadget/g1</span><br><span class="line">./usb_gadget/g1/os_desc</span><br><span class="line">./usb_gadget/g1/os_desc/qw_sign</span><br><span class="line">./usb_gadget/g1/os_desc/b_vendor_code</span><br><span class="line">./usb_gadget/g1/os_desc/use</span><br><span class="line">./usb_gadget/g1/strings</span><br><span class="line">./usb_gadget/g1/strings/0x409</span><br><span class="line">./usb_gadget/g1/strings/0x409/serialnumber</span><br><span class="line">./usb_gadget/g1/strings/0x409/product</span><br><span class="line">./usb_gadget/g1/strings/0x409/manufacturer</span><br><span class="line">./usb_gadget/g1/configs</span><br><span class="line">./usb_gadget/g1/configs/c.1</span><br><span class="line">./usb_gadget/g1/configs/c.1/mass_storage.0</span><br><span class="line">./usb_gadget/g1/configs/c.1/strings</span><br><span class="line">./usb_gadget/g1/configs/c.1/strings/0x409</span><br><span class="line">./usb_gadget/g1/configs/c.1/strings/0x409/configuration</span><br><span class="line">./usb_gadget/g1/configs/c.1/bmAttributes</span><br><span class="line">./usb_gadget/g1/configs/c.1/MaxPower</span><br><span class="line">./usb_gadget/g1/functions</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/inquiry_string</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/nofua</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/cdrom</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/removable</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/ro</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/lun.0/file</span><br><span class="line">./usb_gadget/g1/functions/mass_storage.0/stall</span><br><span class="line">./usb_gadget/g1/UDC</span><br><span class="line">./usb_gadget/g1/bcdUSB</span><br><span class="line">./usb_gadget/g1/bcdDevice</span><br><span class="line">./usb_gadget/g1/idProduct</span><br><span class="line">./usb_gadget/g1/idVendor</span><br><span class="line">./usb_gadget/g1/bMaxPacketSize0</span><br><span class="line">./usb_gadget/g1/bDeviceProtocol</span><br><span class="line">./usb_gadget/g1/bDeviceSubClass</span><br><span class="line">./usb_gadget/g1/bDeviceClass</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看当前的UDC<br>可见当前的板子上有两个UDC，ci_hdrc.0和gadget-cdns3。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">130|@android:/config # ll /sys/class/udc/</span><br><span class="line">total 0</span><br><span class="line">lrwxrwxrwx 1 root root 0 1999-11-30 00:09 ci_hdrc.0 -&gt; ../../devices/platform/5b0d0000.usb/ci_hdrc.0/udc/ci_hdrc.0</span><br><span class="line">lrwxrwxrwx 1 root root 0 1999-11-30 00:09 gadget-cdns3 -&gt; ../../devices/platform/5b110000.usb3/gadget-cdns3/udc/gadget-cdns3</span><br></pre></td></tr></table></figure>
-<ul>
-<li>绑定到UDC，使能gadget<br>将UDC切换至device模式，这里使用OTG ID pin来实现切换。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> ci_hdrc.0 &gt; usb_gadget/g1/UDC</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> 1 &gt; /sys/class/gpio/gpio358/value</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="验证结果"><a href="#验证结果" class="headerlink" title="验证结果"></a>验证结果</h3><p>将配置好的开发板与ubuntu连接，从ubuntu上的串口可以看到如下信息，表示已将开发板配置成一个mass storage的设备了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[95705.390004] usb 1-11: USB disconnect, device number 28</span><br><span class="line">[95708.606717] usb 1-11: new high-speed USB device number 29 using xhci_hcd</span><br><span class="line">[95708.756934] usb 1-11: New USB device found, idVendor=18d1, idProduct=4ee2</span><br><span class="line">[95708.756941] usb 1-11: New USB device strings: Mfr=1, Product=2, SerialNumber=3</span><br><span class="line">[95708.756946] usb 1-11: Product: xxx_product</span><br><span class="line">[95708.756950] usb 1-11: Manufacturer: xxx</span><br><span class="line">[95708.756953] usb 1-11: SerialNumber: 123456789</span><br><span class="line">[95708.766595] usb-storage 1-11:1.0: USB Mass Storage device detected</span><br><span class="line">[95708.766798] scsi host6: usb-storage 1-11:1.0</span><br></pre></td></tr></table></figure>
-<p>当然，上述的结果是ubuntu只识别到一个mass storage的设备，但是没有识别看分区表，所以没有看到相应的磁盘信息。想要看到磁盘信息，可以更进一步的设置mass_storage的<code>backen file</code>属性。</p>
-<h3 id="定制分区"><a href="#定制分区" class="headerlink" title="定制分区"></a>定制分区</h3><p>在上面<code>创建functions</code>步骤之后，执行以下的命令，为mass storage创建2个分区，分区的backing file是开发板上的<code>/dev/block/mmcblk0p1</code>和<code>/dev/block/mmcblk0p2</code>，也就是开发板上的system分区和data分区。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir usb_gadget/g1/functions/mass_storage.0/partition.2</span><br><span class="line">mkdir usb_gadget/g1/functions/mass_storage.0/lun.1</span><br><span class="line">echo /dev/block/mmcblk0p1 &gt; usb_gadget/g1/functions/mass_storage.0/lun.0/file</span><br><span class="line">echo /dev/block/mmcblk0p2 &gt; usb_gadget/g1/functions/mass_storage.0/lun.1/file</span><br></pre></td></tr></table></figure>
-<p>所有配置完成之后，插入到ubuntu后，可以看到能识别去新的分区信息：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">130 victor@victor-HP:/mnt⟫ sudo dmesg -c</span><br><span class="line">[40873.009026] EXT4-fs (sdc): mounted filesystem with ordered data mode. Opts: (null)</span><br><span class="line">[41094.127318] usb 1-11: USB disconnect, device number 23</span><br><span class="line">[41094.128072] print_req_error: I/O error, dev sdc, sector 0</span><br><span class="line">[41094.131049] sd 6:0:0:0: [sdc] Synchronizing SCSI cache</span><br><span class="line">[41094.131118] sd 6:0:0:0: [sdc] Synchronize Cache(10) failed: Result: hostbyte=DID_NO_CONNECT driverbyte=DRIVER_OK</span><br><span class="line">[41466.480635] usb 1-11: new high-speed USB device number 24 using xhci_hcd</span><br><span class="line">[41466.630904] usb 1-11: New USB device found, idVendor=18d1, idProduct=4ee2</span><br><span class="line">[41466.630911] usb 1-11: New USB device strings: Mfr=1, Product=2, SerialNumber=3</span><br><span class="line">[41466.630915] usb 1-11: Product: xxx_product</span><br><span class="line">[41466.630919] usb 1-11: Manufacturer: xxx</span><br><span class="line">[41466.630923] usb 1-11: SerialNumber: 123456789</span><br><span class="line">[41466.640789] usb-storage 1-11:1.0: USB Mass Storage device detected</span><br><span class="line">[41466.641062] scsi host7: usb-storage 1-11:1.0</span><br><span class="line">[41467.645699] scsi 7:0:0:0: Direct-Access     Linux    File-Stor Gadget 0414 PQ: 0 ANSI: 2</span><br><span class="line">[41467.646291] scsi 7:0:0:1: Direct-Access     Linux    File-Stor Gadget 0414 PQ: 0 ANSI: 2</span><br><span class="line">[41467.646826] scsi 7:0:0:2: Direct-Access     Linux    File-Stor Gadget 0414 PQ: 0 ANSI: 2</span><br><span class="line">[41467.647387] sd 7:0:0:0: Attached scsi generic sg2 type 0</span><br><span class="line">[41467.647764] sd 7:0:0:1: Attached scsi generic sg3 type 0</span><br><span class="line">[41467.648144] sd 7:0:0:0: Power-on or device reset occurred</span><br><span class="line">[41467.648173] sd 7:0:0:2: Attached scsi generic sg4 type 0</span><br><span class="line">[41467.649026] sd 7:0:0:1: Power-on or device reset occurred</span><br><span class="line">[41467.649555] sd 7:0:0:2: Power-on or device reset occurred</span><br><span class="line">[41467.650006] sd 7:0:0:0: [sdd] 1048576 512-byte logical blocks: (537 MB/512 MiB)</span><br><span class="line">[41467.650766] sd 7:0:0:1: [sde] 524288 512-byte logical blocks: (268 MB/256 MiB)</span><br><span class="line">[41467.651726] sd 7:0:0:0: [sdd] Write Protect is off</span><br><span class="line">[41467.651731] sd 7:0:0:0: [sdd] Mode Sense: 0f 00 00 00</span><br><span class="line">[41467.651929] sd 7:0:0:1: [sde] Write Protect is off</span><br><span class="line">[41467.651933] sd 7:0:0:1: [sde] Mode Sense: 0f 00 00 00</span><br><span class="line">[41467.652327] sd 7:0:0:2: [sdf] Attached SCSI removable disk</span><br><span class="line">[41467.652581] sd 7:0:0:0: [sdd] Write cache: enabled, read cache: enabled, doesn&#x27;t support DPO or FUA</span><br><span class="line">[41467.652837] sd 7:0:0:1: [sde] Write cache: enabled, read cache: enabled, doesn&#x27;t support DPO or FUA</span><br><span class="line">[41467.673305] sd 7:0:0:1: [sde] Attached SCSI removable disk</span><br><span class="line">[41467.674915] sd 7:0:0:0: [sdd] Attached SCSI removable disk</span><br></pre></td></tr></table></figure>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>上述的配置过程太繁琐了，在Android上，基于configfs有专门的<code>init.rc</code>在启动过程中去配置对应的<code>configuration</code>和<code>function</code>，比如说<code>init.usb.rc</code>，里面包含了一系列gadget的配置方法。在后面的文章中，将详细讲述每条命令背后的实现原理。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">on boot</span><br><span class="line">    write /config/usb_gadget/g1/strings/0x409/serialnumber $&#123;ro.serialno&#125;</span><br><span class="line">    write /config/usb_gadget/g1/strings/0x409/manufacturer $&#123;ro.product.manufacturer&#125;</span><br><span class="line">    write /config/usb_gadget/g1/strings/0x409/product $&#123;ro.product.model&#125;</span><br><span class="line"></span><br><span class="line">    setprop sys.usb.configfs 1</span><br><span class="line"></span><br><span class="line">    # OS DESCRIPTORS</span><br><span class="line">    #===============</span><br><span class="line">    # OS STRING</span><br><span class="line">    #----------</span><br><span class="line">    write /config/usb_gadget/g1/os_desc/b_vendor_code 1</span><br><span class="line">    write /config/usb_gadget/g1/os_desc/qw_sign &quot;MSFT100&quot;</span><br><span class="line">    # use os desc or not is up to each usb functions respectively</span><br><span class="line">    # write /config/usb_gadget/g1/os_desc/use 1</span><br><span class="line"></span><br><span class="line">    # MAKE b.1 THE ONE ASSOCIATED WITH OS DESCRIPTORS</span><br><span class="line">    #------------------------------------------------</span><br><span class="line">    symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b1</span><br><span class="line"></span><br><span class="line">    # ci_hdrc.0 is the fixed UDC name</span><br><span class="line">    setprop sys.usb.controller ci_hdrc.0</span><br><span class="line"></span><br><span class="line">on fs</span><br><span class="line">    mkdir /dev/usb-ffs 0770 shell shell</span><br><span class="line">    mkdir /dev/usb-ffs/adb 0770 shell shell</span><br><span class="line">    # mount the configfs on /config</span><br><span class="line">    mount configfs none /config mode=0755</span><br><span class="line">    mkdir /config/usb_gadget/g1</span><br><span class="line">    mkdir /config/usb_gadget/g1/configs/b.1</span><br><span class="line">    # mkdir for functions needed</span><br><span class="line">    # this will call each gadget&#x27;s alloc_inst()</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/ffs.adb</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/mtp.gs0</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/ptp.gs1</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/accessory.gs2</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/audio_source.gs3</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/rndis.gs4</span><br><span class="line">    mkdir /config/usb_gadget/g1/functions/midi.gs5</span><br><span class="line">    mkdir /config/usb_gadget/g1/strings/0x409</span><br><span class="line">    mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409</span><br><span class="line">    # The mount of functionfs for adb must be put AFTER the mkdir for functions in configfs</span><br><span class="line"></span><br><span class="line">on property:sys.usb.config=none &amp;&amp; property:sys.usb.configfs=1</span><br><span class="line">    write /config/usb_gadget/g1/os_desc/use 0</span><br><span class="line"></span><br><span class="line">on property:sys.usb.ffs.ready=1 &amp;&amp; property:sys.usb.config=adb &amp;&amp; property:sys.usb.configfs=1</span><br><span class="line">    write /config/usb_gadget/g1/idProduct 0x4ee7</span><br><span class="line">    write /config/usb_gadget/g1/idVendor 0x18d1</span><br><span class="line"></span><br><span class="line">on property:sys.usb.config=mtp &amp;&amp; property:sys.usb.configfs=1</span><br><span class="line">    write /config/usb_gadget/g1/functions/mtp.gs0/os_desc/interface.MTP/compatible_id &quot;MTP&quot;</span><br><span class="line">    write /config/usb_gadget/g1/os_desc/use 1</span><br><span class="line">    write /config/usb_gadget/g1/idProduct 0x4ee1</span><br><span class="line">    write /config/usb_gadget/g1/idVendor 0x18d1</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/06/usb-gadget-configfs-%E9%AA%8C%E8%AF%81/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
 	  <div>
       
-    </div>
-	  </div>
     
     
     
@@ -294,7 +382,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/06/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/06/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/pig.jpg">
@@ -319,10 +407,24 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-06 10:59:52 / 修改时间：12:02:02" itemprop="dateCreated datePublished" datetime="2020-09-06T10:59:52+08:00">2020-09-06</time>
+              <time title="创建时间：2020-09-06 10:59:52 / 修改时间：18:40:55" itemprop="dateCreated datePublished" datetime="2020-09-06T10:59:52+08:00">2020-09-06</time>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>367</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -337,21 +439,17 @@
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/06/hello-world/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
 	  <div>
       
-    </div>
-	  </div>
     
     
     
@@ -429,9 +527,8 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">2</span>
+          <a href="/archives">
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -488,11 +585,39 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">橙子与小果</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">16k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14 分钟</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
@@ -526,6 +651,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
