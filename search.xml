@@ -54,19 +54,21 @@
 </ul>
 <h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[   49.736372] Unable to handle kernel paging request at virtual address 6b6b6b5f</span><br><span class="line">[   49.744537] pgd &#x3D; c0d20000</span><br><span class="line">[   49.747576] [6b6b6b5f] *pgd&#x3D;00000000</span><br><span class="line">[   49.751791] Internal error: Oops - BUG: 5 [#1] PREEMPT SMP THUMB2</span><br><span class="line">[   49.758633] Modules linked in: da380 vin_v4l2 tp9950 imx335_mipi vin_io videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_core</span><br><span class="line">[   49.772770] CPU: 0 PID: 1206 Comm: poweroff Not tainted 4.9.118 #326</span><br><span class="line">[   49.779902] Hardware name: sun8iw16</span><br><span class="line">[   49.783819] task: c3c7aa40 task.stack: c0cb6000</span><br><span class="line">[   49.789064] PC is at __vin_pipeline_close+0x1b&#x2F;0x68 [vin_v4l2]</span><br><span class="line">[   49.795707] LR is at __vin_pipeline_s_stream+0x226&#x2F;0x25c [vin_v4l2]</span><br><span class="line">[   49.802749] pc : [&lt;bf8388f4&gt;]    lr : [&lt;bf837f83&gt;]    psr: 20000033</span><br><span class="line">[   49.802749] sp : c0cb7e38  ip : c0cb603c  fp : ffffffb8</span><br><span class="line">[   49.815641] r10: c3cb6304  r9 : c0332609  r8 : c042b820</span><br><span class="line">[   49.821510] r7 : c3ca3bd0  r6 : c044a944  r5 : 00000000  r4 : 6b6b5d0b</span><br><span class="line">[   49.828839] r3 : 6b6b6b66  r2 : 00002000  r1 : 00000000  r0 : 00000000</span><br><span class="line">[   49.836172] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment none</span><br><span class="line">[   49.844382] Control: 50c5387d  Table: 40d2006a  DAC: 00000051</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-确定发生oops属于内核模块还是驱动模块"><a href="#1-确定发生oops属于内核模块还是驱动模块" class="headerlink" title="1.确定发生oops属于内核模块还是驱动模块?"></a>1.确定发生oops属于内核模块还是驱动模块?</h4><p>​    根据以下oops信息，我们可以得到：</p>
-<p>此oops发生在cpu0上，发生时pc的值为bf8388f4，根据pc的值来确定时内核模块还是驱动模块。</p>
-<p>查看<strong>System.map</strong>确定内核的函数的地址范围:0000002c~c0450ad4，而本PC值为bf8388f4，并不属于内核模块，而是属于加载模块。</p>
-<h4 id="2-根据pc确定错误出在哪一个加载的内核模块"><a href="#2-根据pc确定错误出在哪一个加载的内核模块" class="headerlink" title="2.根据pc确定错误出在哪一个加载的内核模块"></a>2.根据pc确定错误出在哪一个加载的内核模块</h4><ul>
-<li><p>cat /proc/kallsyms (内核函数、加载的函数的地址)  &gt; /data/kallsyms.txt</p>
-</li>
-<li><p>从这些信息中找出一个跟bf8388f4相近的地址</p>
+<h3 id="1-确定发生oops属于内核模块还是驱动模块"><a href="#1-确定发生oops属于内核模块还是驱动模块" class="headerlink" title="1. 确定发生oops属于内核模块还是驱动模块?"></a>1. 确定发生oops属于内核模块还是驱动模块?</h3><ul>
+<li><p>根据以下oops信息，我们可以得到：</p>
+<ul>
+<li>此oops发生在<font color=red>CPU: 0</font>上，发生的进程为 <font color=red>Comm: poweroff</font>，发生进程的PID为<font color=red>1206</font>，发生时<font color=red>pc</font>的值为<font color=red>bf8388f4</font>，根据<font color=red>pc</font>的值来确定时内核模块还是驱动模块。</li>
+<li>查看<font color=red>System.map</font>确定内核的函数的地址范围：<font color=red>0000002c~c0450ad4 </font>，而本PC值为bf8388f4，并不属于内核模块，而是属于加载模块。</li>
+</ul>
 </li>
 </ul>
-<p>我们找到如下信息：</p>
-<p>bf8388d8 t $t    [vin_v4l2]，可以确定为vin_v4l2.ko模块</p>
-<p>PC is at __vin_pipeline_close+0x1b/0x68 [vin_v4l2]可以确定是在 __vin_pipeline_close+0x1b/0x68中便宜0x1b个字节的地方，该函数的总大小为0x68个字节。</p>
-<h4 id="3-根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和-ko文件进行反汇编"><a href="#3-根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和-ko文件进行反汇编" class="headerlink" title="3.根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和.ko文件进行反汇编"></a>3.根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和.ko文件进行反汇编</h4><ul>
+<h3 id="2-如果是驱动模块，根据pc值确定错误出在哪一个加载的内核模块"><a href="#2-如果是驱动模块，根据pc值确定错误出在哪一个加载的内核模块" class="headerlink" title="2. 如果是驱动模块，根据pc值确定错误出在哪一个加载的内核模块"></a>2. 如果是驱动模块，根据pc值确定错误出在哪一个加载的内核模块</h3><ul>
+<li><p><font color=red> cat /proc/kallsyms</font> (内核函数、加载的函数的地址)  &gt; /data/kallsyms.txt</p>
+</li>
+<li><p>从这些信息中找出一个跟PC指针值相近的地址</p>
+</li>
+</ul>
+<h3 id="3-根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和-ko文件进行反汇编"><a href="#3-根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和-ko文件进行反汇编" class="headerlink" title="3. 根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和.ko文件进行反汇编"></a>3. 根据oops信息崩溃在内核模块还是驱动模块，分别对vimlinx和.ko文件进行反汇编</h3><ul>
 <li><p>对内核模块反汇编</p>
 <p><code> arm-linux-gnueabihf-objdump -D vmlinux &gt; ./vmlinux.dis</code></p>
 </li>
@@ -74,7 +76,14 @@
 <p><code>arm-linux-gnueabihf-objdump -D -S drivers/media/platform/sunxi-vin/vin_v4l2.ko ./vin_v4l2.dis</code></p>
 </li>
 </ul>
-<h4 id="4-根据oops信息，确定发生错误的代码位置"><a href="#4-根据oops信息，确定发生错误的代码位置" class="headerlink" title="4.根据oops信息，确定发生错误的代码位置"></a>4.根据oops信息，确定发生错误的代码位置</h4><p>​    打开生成的dis文件，根据oops信息中pc指针的值以及发生的偏移量，同时根据r0~r10，sp, ip, fp寄存器的值，加以辅助，确定发生错误的汇编指令，且找到对应C语言发生错误的位置。</p>
+<h3 id="4-根据oops信息，确定发生错误的代码位置"><a href="#4-根据oops信息，确定发生错误的代码位置" class="headerlink" title="4.根据oops信息，确定发生错误的代码位置"></a>4.根据oops信息，确定发生错误的代码位置</h3><p>​    打开生成的<font color=red>dis</font>文件，直接搜<font color=red>_vin_pipeline_close</font>的地址或者根据<font color=red> PC</font>指针的值，然后计算偏移<font color=red>0x1b</font>的地址，找到对应的汇编指令，做以下操作：</p>
+<ul>
+<li><p>根据oops中据<font color=red>r0~r10，sp, ip, fp</font>寄存器的值，理解汇编指令的大概意义</p>
+</li>
+<li><p>根据偏移<font color=red>0x1b</font>后得到的偏移地址，使用<font color=red>addr2line</font>工具确定C语言代码位置，使用方法如下：</p>
+<p><code>arm-linux-gnueabihf-add2line -e drivers/media/platform/sunxi-vin/vin_v4l2.ko  -Cf 偏移的地址</code></p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>Linux oops Debug技巧</category>
