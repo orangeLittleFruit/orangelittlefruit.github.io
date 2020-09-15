@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+<script   src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"orange.obey.fun","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="oops信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010">
+<meta property="og:type" content="article">
+<meta property="og:title" content="oops实例分析之一">
+<meta property="og:url" content="http://orange.obey.fun/2020/09/15/oops%E5%AE%9E%E4%BE%8B%E5%88%86%E6%9E%90%E4%B9%8B%E4%B8%80/index.html">
+<meta property="og:site_name" content="橙子和小果">
+<meta property="og:description" content="oops信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-15T15:09:22.000Z">
+<meta property="article:modified_time" content="2020-09-15T15:29:13.106Z">
+<meta property="article:author" content="橙子和小果">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://orange.obey.fun/2020/09/15/oops%E5%AE%9E%E4%BE%8B%E5%88%86%E6%9E%90%E4%B9%8B%E4%B8%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>oops实例分析之一 | 橙子和小果</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">橙子和小果</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">99%的认知，1%的代码</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://orange.obey.fun/2020/09/15/oops%E5%AE%9E%E4%BE%8B%E5%88%86%E6%9E%90%E4%B9%8B%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/pig.jpg">
+      <meta itemprop="name" content="橙子和小果">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="橙子和小果">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          oops实例分析之一
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-15 23:09:22 / 修改时间：23:29:13" itemprop="dateCreated datePublished" datetime="2020-09-15T23:09:22+08:00">2020-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-oops-Debug%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index"><span itemprop="name">Linux oops Debug技巧</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="oops信息"><a href="#oops信息" class="headerlink" title="oops信息"></a>oops信息</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line">[   <span class="number">61.110960</span>] Internal error: Accessing user space memory outside uaccess.h routines: <span class="number">96000005</span> [#<span class="number">1</span>] PREEMPT SMP</span><br><span class="line">[   <span class="number">61.122053</span>] Modules linked in: <span class="function">gt9xxnew_ts <span class="title">pvrsrvkm</span><span class="params">(O)</span> bcm_btlpm mir3da vin_v4l2 dw9714_act actuator gc5035_mipi gc8603_mipi vin_io videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_core</span></span><br><span class="line">[   61.141910] CPU: 0 PID: 4579 Comm: HwBinder:4569_2 Tainted: G           O    4.9.170 #5</span><br><span class="line">[   <span class="number">61.150854</span>] Hardware name: sun50iw10 (DT)</span><br><span class="line">[   <span class="number">61.155326</span>] task: ffffffc04c723a00 task.<span class="built_in">stack</span>: ffffffc03e3d4000</span><br><span class="line">[   <span class="number">61.162003</span>] PC is at vin_s_ctrl+<span class="number">0x1ec</span>/<span class="number">0x5c8</span> [vin_v4l2]</span><br><span class="line">[   <span class="number">61.167794</span>] LR is at vin_s_ctrl+<span class="number">0x1ec</span>/<span class="number">0x5c8</span> [vin_v4l2]</span><br><span class="line">[   <span class="number">61.173534</span>] pc : [&lt;ffffff8000ba0584&gt;] lr : [&lt;ffffff8000ba0584&gt;] pstate: <span class="number">60400145</span></span><br><span class="line">[   <span class="number">61.181794</span>] sp : ffffffc03e3d79e0</span><br><span class="line">[   <span class="number">61.185492</span>] x29: ffffffc03e3d79e0 x28: ffffffc0391e7b00 </span><br><span class="line">[   <span class="number">61.191425</span>] x27: <span class="number">0000000000000000</span> x26: <span class="number">0000000000000000</span> </span><br><span class="line">[   <span class="number">61.197363</span>] x25: <span class="number">0000000000000001</span> x24: <span class="number">0000000000000001</span> </span><br><span class="line">[   <span class="number">61.203289</span>] x23: <span class="number">0000000000000000</span> x22: ffffffc077024400 </span><br><span class="line">[   <span class="number">61.209224</span>] x21: ffffff800932df10 x20: ffffffc07972ed00 </span><br><span class="line">[   <span class="number">61.215161</span>] x19: ffffffc07829e148 x18: <span class="number">0000000000000000</span> </span><br><span class="line">[   <span class="number">61.221100</span>] x17: <span class="number">0000000000000000</span> x16: ffffff80082a6020 </span><br><span class="line">[   <span class="number">61.227034</span>] x15: <span class="number">0000000000000000</span> x14: <span class="number">00000000e807377</span>d </span><br><span class="line">[   <span class="number">61.232960</span>] x13: <span class="number">00000000e6</span>d23d40 x12: <span class="number">0000000000000000</span> </span><br><span class="line">[   <span class="number">61.238895</span>] x11: <span class="number">00000000e7</span>b17a88 x10: <span class="number">00000000e7</span>b17aac </span><br><span class="line">[   <span class="number">61.244833</span>] x9 : <span class="number">00000000e6</span>d23f10 x8 : <span class="number">0000000000000000</span> </span><br><span class="line">[   <span class="number">61.250767</span>] x7 : ffffff800932df10 x6 : ffffffc07759aec0 </span><br><span class="line">[   <span class="number">61.256703</span>] x5 : <span class="number">0000000000000000</span> x4 : ffffffc03e3d78d0 </span><br><span class="line">[   <span class="number">61.262630</span>] x3 : ffffffc0777e0274 x2 : <span class="number">00000000000409</span>aa </span><br><span class="line">[   <span class="number">61.268567</span>] x1 : <span class="number">0000000000000000</span> x0 : <span class="number">0000000000000000</span> </span><br><span class="line">[   <span class="number">61.274510</span>] </span><br><span class="line">[   <span class="number">61.274510</span>] SP: <span class="number">0xffffffc03e3d7960</span>:</span><br><span class="line">[   <span class="number">61.280045</span>] <span class="number">7960</span>  <span class="number">77024400</span> ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.289197</span>] <span class="number">7980</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>b00 ffffffc0 <span class="number">3e3</span>d79e0 ffffffc0</span><br><span class="line">[   <span class="number">61.298352</span>] <span class="number">79</span>a0  <span class="number">00b</span>a0584 ffffff80 <span class="number">3e3</span>d79e0 ffffffc0 <span class="number">00b</span>a0584 ffffff80 <span class="number">60400145</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.307502</span>] <span class="number">79</span>c0  <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> ffffffff <span class="number">0000007f</span> <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.316661</span>] <span class="number">79e0</span>  <span class="number">3e3</span>d7a40 ffffffc0 <span class="number">0876334</span>c ffffff80 <span class="number">7972</span>ed00 ffffffc0 <span class="number">00000001</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.325817</span>] <span class="number">7</span>a00  <span class="number">7972</span>ed00 ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>b00 ffffffc0 <span class="number">08763300</span> ffffff80</span><br><span class="line">[   <span class="number">61.334998</span>] <span class="number">7</span>a20  <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">7972</span>ed00 ffffffc0 <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.344162</span>] <span class="number">7</span>a40  <span class="number">3e3</span>d7aa0 ffffffc0 <span class="number">087635</span>d8 ffffff80 <span class="number">00000002</span> <span class="number">00000000</span> <span class="number">7972</span>ed00 ffffffc0</span><br><span class="line">[   <span class="number">61.353330</span>] </span><br><span class="line">[   <span class="number">61.353330</span>] X3: <span class="number">0xffffffc0777e01f4</span>:</span><br><span class="line">[   <span class="number">61.358870</span>] <span class="number">01f</span>4  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.368041</span>] <span class="number">0214</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.377207</span>] <span class="number">0234</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.386372</span>] <span class="number">0254</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">7b</span>b47c00 ffffffc0 <span class="number">00000001</span></span><br><span class="line">[   <span class="number">61.395533</span>] <span class="number">0274</span>  <span class="number">013</span>c013c <span class="number">777e0278</span> ffffffc0 <span class="number">777e0278</span> ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">777e0270</span></span><br><span class="line">[   <span class="number">61.404707</span>] <span class="number">0294</span>  ffffffc0 <span class="number">777e0270</span> ffffffc0 <span class="number">796f</span>dd00 ffffffc0 <span class="number">79b</span>6d300 ffffffc0 <span class="number">777b</span>d800</span><br><span class="line">[   <span class="number">61.413864</span>] <span class="number">02b</span>4  ffffffc0 <span class="number">772b</span>bf80 ffffffc0 <span class="number">772b</span>bf80 ffffffc0 <span class="number">777b</span>d700 ffffffc0 <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.423028</span>] <span class="number">02</span>d4  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000007</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.432199</span>] </span><br><span class="line">[   <span class="number">61.432199</span>] X4: <span class="number">0xffffffc03e3d7850</span>:</span><br><span class="line">[   <span class="number">61.437732</span>] <span class="number">7850</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00b</span>94b24 ffffff80 <span class="number">3e3</span>d78d0 ffffffc0</span><br><span class="line">[   <span class="number">61.446903</span>] <span class="number">7870</span>  <span class="number">3e3</span>d78c0 ffffffc0 <span class="number">00b</span>94b24 ffffff80 ffffffff ffffffc0 <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.456069</span>] <span class="number">7890</span>  <span class="number">3e3</span>d78b0 ffffffc0 <span class="number">08b</span>0ce64 ffffff80 <span class="number">00000140</span> <span class="number">00000000</span> <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.465227</span>] <span class="number">78b</span>0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">000409</span>aa <span class="number">00000000</span> <span class="number">777e0274</span> ffffffc0</span><br><span class="line">[   <span class="number">61.474401</span>] <span class="number">78</span>d0  <span class="number">3e3</span>d78d0 ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">7759</span>aec0 ffffffc0 <span class="number">0932</span>df10 ffffff80</span><br><span class="line">[   <span class="number">61.483556</span>] <span class="number">78f</span>0  <span class="number">00000000</span> <span class="number">00000000</span> e6d23f10 <span class="number">00000000</span> e7b17aac <span class="number">00000000</span> e7b17a88 <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.492718</span>] <span class="number">7910</span>  <span class="number">00000000</span> <span class="number">00000000</span> e6d23d40 <span class="number">00000000</span> e807377d <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.501880</span>] <span class="number">7930</span>  <span class="number">082</span>a6020 ffffff80 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">7829e148</span> ffffffc0</span><br><span class="line">[   <span class="number">61.511046</span>] </span><br><span class="line">[   <span class="number">61.511046</span>] X6: <span class="number">0xffffffc07759ae40</span>:</span><br><span class="line">[   <span class="number">61.516586</span>] ae40  <span class="number">08b</span>bb6a0 ffffff80 <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">08e22</span>ee8 ffffff80 <span class="number">00000003</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.525733</span>] ae60  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000004</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000004</span></span><br><span class="line">[   <span class="number">61.534888</span>] ae80  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.544040</span>] aea0  <span class="number">08b</span>bb230 ffffff80 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.553188</span>] aec0  <span class="number">7759</span>aeb8 ffffffc0 <span class="number">7759</span>aebc ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.562359</span>] aee0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.571511</span>] af00  <span class="number">7759</span>a400 ffffffc0 <span class="number">7759</span>a200 ffffffc0 <span class="number">7759</span>af10 ffffffc0 <span class="number">7759</span>af10 ffffffc0</span><br><span class="line">[   <span class="number">61.580672</span>] af20  <span class="number">777e0270</span> ffffffc0 <span class="number">772b</span>b998 ffffffc0 <span class="number">00000001</span> <span class="number">00000020</span> <span class="number">00b</span>ada88 ffffff80</span><br><span class="line">[   <span class="number">61.589833</span>] </span><br><span class="line">[   <span class="number">61.589833</span>] X19: <span class="number">0xffffffc07829e0c8</span>:</span><br><span class="line">[   <span class="number">61.595467</span>] e0c8  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.604617</span>] e0e8  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.613772</span>] e108  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.622933</span>] e128  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.632093</span>] e148  <span class="number">78</span>d1f100 ffffffc0 <span class="number">00000009</span> <span class="number">00000000</span> <span class="number">7829</span>cc38 ffffffc0 <span class="number">7829</span>ec38 ffffffc0</span><br><span class="line">[   <span class="number">61.641251</span>] e168  <span class="number">7829e5</span>f8 ffffffc0 <span class="number">00000001</span> <span class="number">00010001</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00010001</span> <span class="number">00000001</span></span><br><span class="line">[   <span class="number">61.650418</span>] e188  <span class="number">00000005</span> <span class="number">00000000</span> <span class="number">7829</span>ed60 ffffffc0 <span class="number">777</span>ad5a0 ffffffc0 <span class="number">777</span>ad5a0 ffffffc0</span><br><span class="line">[   <span class="number">61.659567</span>] e1a8  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000051</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.668741</span>] </span><br><span class="line">[   <span class="number">61.668741</span>] X20: <span class="number">0xffffffc07972ec80</span>:</span><br><span class="line">[   <span class="number">61.674370</span>] ec80  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.683531</span>] eca0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000044</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.692701</span>] ecc0  <span class="number">7972</span>ecb8 ffffffc0 <span class="number">7972</span>ecbc ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.701854</span>] ece0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.711024</span>] ed00  <span class="number">7972</span>ee00 ffffffc0 <span class="number">7972</span>ec00 ffffffc0 <span class="number">7972</span>ed10 ffffffc0 <span class="number">7972</span>ed10 ffffffc0</span><br><span class="line">[   <span class="number">61.720190</span>] ed20  <span class="number">7829</span>ee10 ffffffc0 <span class="number">777</span>c4698 ffffffc0 <span class="number">00000001</span> <span class="number">00000026</span> <span class="number">00b</span>ae868 ffffff80</span><br><span class="line">[   <span class="number">61.729355</span>] ed40  <span class="number">08b</span>bb6a0 ffffff80 <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">08e22</span>ee8 ffffff80 <span class="number">00000003</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.738505</span>] ed60  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000004</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000004</span></span><br><span class="line">[   <span class="number">61.747668</span>] </span><br><span class="line">[   <span class="number">61.747668</span>] X22: <span class="number">0xffffffc077024380</span>:</span><br><span class="line">[   <span class="number">61.753303</span>] <span class="number">4380</span>  ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff</span><br><span class="line">[   <span class="number">61.762459</span>] <span class="number">43</span>a0  ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff</span><br><span class="line">[   <span class="number">61.771612</span>] <span class="number">43</span>c0  ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff</span><br><span class="line">[   <span class="number">61.780765</span>] <span class="number">43e0</span>  ffffffff ffffffff <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">0000070b</span></span><br><span class="line">[   <span class="number">61.789915</span>] <span class="number">4400</span>  <span class="number">78</span>d1f100 ffffffc0 <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00b</span>8a420 ffffff80 <span class="number">78</span>d1f1e8 ffffffc0</span><br><span class="line">[   <span class="number">61.799082</span>] <span class="number">4420</span>  <span class="number">770244</span>c0 ffffffc0 <span class="number">00000002</span> <span class="number">00020001</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00040001</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.808262</span>] <span class="number">4440</span>  <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">77024538</span> ffffffc0 <span class="number">777</span>ad120 ffffffc0 <span class="number">777</span>ac020 ffffffc0</span><br><span class="line">[   <span class="number">61.817417</span>] <span class="number">4460</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000051</span> <span class="number">00000004</span></span><br><span class="line">[   <span class="number">61.826583</span>] </span><br><span class="line">[   <span class="number">61.826583</span>] X28: <span class="number">0xffffffc0391e7a80</span>:</span><br><span class="line">[   <span class="number">61.832230</span>] <span class="number">7</span>a80  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">7b</span>ad1840 ffffffc0</span><br><span class="line">[   <span class="number">61.841382</span>] <span class="number">7</span>aa0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000020</span> <span class="number">00000000</span> <span class="number">00000034</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.850542</span>] <span class="number">7</span>ac0  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">3</span>d285bb0 ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>ad8 ffffffc0</span><br><span class="line">[   <span class="number">61.859715</span>] <span class="number">7</span>ae0  <span class="number">391e7</span>ad8 ffffffc0 <span class="number">391e7</span>ae8 ffffffc0 <span class="number">391e7</span>ae8 ffffffc0 <span class="number">750</span>ab008 ffffffc0</span><br><span class="line">[   <span class="number">61.868882</span>] <span class="number">7b</span>00  <span class="number">7829e638</span> ffffffc0 <span class="number">7829e638</span> ffffffc0 <span class="number">7829e148</span> ffffffc0 <span class="number">7829</span>ee10 ffffffc0</span><br><span class="line">[   <span class="number">61.878054</span>] <span class="number">7b</span>20  <span class="number">00000002</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>b30 ffffffc0 <span class="number">391e7</span>b30 ffffffc0</span><br><span class="line">[   <span class="number">61.887222</span>] <span class="number">7b</span>40  <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">391e7</span>b48 ffffffc0 <span class="number">391e7</span>b48 ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.896380</span>] <span class="number">7b</span>60  <span class="number">391e7</span>b40 ffffffc0 <span class="number">391e7</span>b68 ffffffc0 <span class="number">391e7</span>b68 ffffffc0 <span class="number">391e7</span>b78 ffffffc0</span><br><span class="line">[   <span class="number">61.905545</span>] </span><br><span class="line">[   <span class="number">61.905545</span>] X29: <span class="number">0xffffffc03e3d7960</span>:</span><br><span class="line">[   <span class="number">61.911177</span>] <span class="number">7960</span>  <span class="number">77024400</span> ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.920328</span>] <span class="number">7980</span>  <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>b00 ffffffc0 <span class="number">3e3</span>d79e0 ffffffc0</span><br><span class="line">[   <span class="number">61.929503</span>] <span class="number">79</span>a0  <span class="number">00b</span>a0584 ffffff80 <span class="number">3e3</span>d79e0 ffffffc0 <span class="number">00b</span>a0584 ffffff80 <span class="number">60400145</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.938664</span>] <span class="number">79</span>c0  <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> ffffffff <span class="number">0000007f</span> <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.947827</span>] <span class="number">79e0</span>  <span class="number">3e3</span>d7a40 ffffffc0 <span class="number">0876334</span>c ffffff80 <span class="number">7972</span>ed00 ffffffc0 <span class="number">00000001</span> <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.956980</span>] <span class="number">7</span>a00  <span class="number">7972</span>ed00 ffffffc0 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">391e7</span>b00 ffffffc0 <span class="number">08763300</span> ffffff80</span><br><span class="line">[   <span class="number">61.966134</span>] <span class="number">7</span>a20  <span class="number">009</span>c0901 <span class="number">00000000</span> <span class="number">00000001</span> <span class="number">00000000</span> <span class="number">7972</span>ed00 ffffffc0 <span class="number">000409</span>aa <span class="number">00000000</span></span><br><span class="line">[   <span class="number">61.975300</span>] <span class="number">7</span>a40  <span class="number">3e3</span>d7aa0 ffffffc0 <span class="number">087635</span>d8 ffffff80 <span class="number">00000002</span> <span class="number">00000000</span> <span class="number">7972</span>ed00 ffffffc0</span><br><span class="line">[   <span class="number">61.984467</span>] </span><br><span class="line">[   <span class="number">61.986126</span>] Process HwBinder:<span class="number">4569</span>_2 (pid: <span class="number">4579</span>, <span class="built_in">stack</span> limit = <span class="number">0xffffffc03e3d4000</span>)</span><br><span class="line">[   <span class="number">61.994485</span>] Stack: (<span class="number">0xffffffc03e3d79e0</span> to <span class="number">0xffffffc03e3d8000</span>)</span><br><span class="line">[   <span class="number">62.000899</span>] <span class="number">79e0</span>: ffffffc03e3d7a40 ffffff800876334c ffffffc07972ed00 <span class="number">0000000000000001</span></span><br><span class="line">[   <span class="number">62.009630</span>] <span class="number">7</span>a00: ffffffc07972ed00 <span class="number">0000000000000000</span> ffffffc0391e7b00 ffffff8008763300</span><br><span class="line">[   <span class="number">62.018363</span>] <span class="number">7</span>a20: <span class="number">00000000009</span>c0901 <span class="number">0000000000000001</span> ffffffc07972ed00 <span class="number">00000000000409</span>aa</span><br><span class="line">[   <span class="number">62.027108</span>] <span class="number">7</span>a40: ffffffc03e3d7aa0 ffffff80087635d8 <span class="number">0000000000000002</span> ffffffc07972ed00</span><br><span class="line">[   <span class="number">62.035844</span>] <span class="number">7</span>a60: ffffffc07972ed00 ffffffc0391e7b00 <span class="number">0000000000000000</span> ffffffc07972edb8</span><br><span class="line">[   <span class="number">62.044589</span>] <span class="number">7</span>a80: ffffffc03e3d7ce8 ffffff8000baf150 <span class="number">0000000000000000</span> ffffffc0391e7b00</span><br><span class="line">[   <span class="number">62.053306</span>] <span class="number">7</span>aa0: ffffffc03e3d7ae0 ffffff80087636d4 ffffffc07972ed00 ffffff800932d000</span><br><span class="line">[   <span class="number">62.062053</span>] <span class="number">7</span>ac0: ffffffc0391e7b00 ffffffc03e3d7ce8 ffffff8000baf150 ffffff8009489dc8</span><br><span class="line">[   <span class="number">62.070787</span>] <span class="number">7</span>ae0: ffffffc03e3d7b30 ffffff800875b264 ffffff800932d000 ffffffc0391e7b00</span><br><span class="line">[   <span class="number">62.079523</span>] <span class="number">7b</span>00: ffffffc06e4e2d00 ffffffc03e3d7ce8 <span class="number">00000000009</span>c0901 <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.088271</span>] <span class="number">7b</span>20: ffffff8000000000 <span class="number">00000000000409</span>aa ffffffc03e3d7bb0 ffffff80087594e4</span><br><span class="line">[   <span class="number">62.097014</span>] <span class="number">7b</span>40: <span class="number">00000000</span>c008561c ffffffc07829e148 ffffff800932d000 ffffffc06e4e2d00</span><br><span class="line">[   <span class="number">62.105759</span>] <span class="number">7b</span>60: <span class="number">0000000000000000</span> ffffff8009489f28 ffffffc03e3d7ce8 ffffff8000baf150</span><br><span class="line">[   <span class="number">62.114511</span>] <span class="number">7b</span>80: ffffffc03e3d7bb0 ffffff80087594e4 ffffffc03e3d7bb0 ffffff8008759534</span><br><span class="line">[   <span class="number">62.123258</span>] <span class="number">7b</span>a0: <span class="number">00000000</span>c008561c <span class="number">00000000000409</span>aa ffffffc03e3d7c60 ffffff8008758f28</span><br><span class="line">[   <span class="number">62.132006</span>] <span class="number">7b</span>c0: ffffff800932d000 <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> ffffffc03e3d7ce8</span><br><span class="line">[   <span class="number">62.140755</span>] <span class="number">7b</span>e0: <span class="number">0000000000000003</span> <span class="number">00000000e6</span>d23d60 <span class="number">0000000000000000</span> <span class="number">00000000</span>c008561c</span><br><span class="line">[   <span class="number">62.149498</span>] <span class="number">7</span>c00: <span class="number">0000000000000000</span> ffffff80087592f0 ffffff8009489000 <span class="number">000000000000001</span>c</span><br><span class="line">[   <span class="number">62.158236</span>] <span class="number">7</span>c20: ffffffc0391e7b00 <span class="number">0000000008758</span>d84 ffffff800932d000 <span class="number">0000000000000008</span></span><br><span class="line">[   <span class="number">62.166980</span>] <span class="number">7</span>c40: <span class="number">0000000000000008</span> ffffffc03e3d7ce8 <span class="number">0000000000000003</span> <span class="number">00000000000409</span>aa</span><br><span class="line">[   <span class="number">62.175715</span>] <span class="number">7</span>c60: ffffffc03e3d7d70 ffffff80087592dc ffffffc06e4e2d00 <span class="number">00000000</span>c008561c</span><br><span class="line">[   <span class="number">62.184453</span>] <span class="number">7</span>c80: <span class="number">00000000e6</span>d23d60 <span class="number">00000000e6</span>d23d60 ffffffc07829ea68 <span class="number">00000000</span>c008561c</span><br><span class="line">[   <span class="number">62.193187</span>] <span class="number">7</span>ca0: <span class="number">00000000e6</span>d23d60 <span class="number">0000000000000036</span> ffffff8008b26000 ffffffc04c723a00</span><br><span class="line">[   <span class="number">62.201942</span>] <span class="number">7</span>cc0: ffffffc03e3d7ce0 ffffff8008b08d7c <span class="number">0000000000000000</span> ffffffc06e4e2d00</span><br><span class="line">[   <span class="number">62.210681</span>] <span class="number">7</span>ce0: ffffffc03e3d7d80 <span class="number">00000000009</span>c0901 ffffffc07829ea68 ffffffc06e4e2d00</span><br><span class="line">[   <span class="number">62.219431</span>] <span class="number">7</span>d00: <span class="number">00000000</span>c008561c <span class="number">00000000e6</span>d23d60 ffffffc07829ea68 <span class="number">00000000</span>c008561c</span><br><span class="line">[   <span class="number">62.228176</span>] <span class="number">7</span>d20: <span class="number">00000000e6</span>d23d60 <span class="number">0000000000000036</span> ffffff8008b26000 ffffffc04c723a00</span><br><span class="line">[   <span class="number">62.236912</span>] <span class="number">7</span>d40: <span class="number">00000000</span>c0045627 <span class="number">00000000e6</span>d23d3c ffffffc07829ea68 ffffff8008237464</span><br><span class="line">[   <span class="number">62.245649</span>] <span class="number">7</span>d60: ffffffc03e3d7d80 <span class="number">00000000000409</span>aa ffffffc03e3d7da0 ffffff8008753338</span><br><span class="line">[   <span class="number">62.254400</span>] <span class="number">7</span>d80: ffffffc07829e148 ffffffc06e4e2d00 <span class="number">00000000</span>c008561c ffffffc06e4e2d00</span><br><span class="line">[   <span class="number">62.263139</span>] <span class="number">7</span>da0: ffffffc03e3d7de0 ffffff800876e350 ffffff800932d000 ffffffc06e4e2d00</span><br><span class="line">[   <span class="number">62.271877</span>] <span class="number">7</span>dc0: <span class="number">00000000</span>c008561c <span class="number">00000000e6</span>d23d60 <span class="number">0000000000000056</span> ffffff800937fde0</span><br><span class="line">[   <span class="number">62.280617</span>] <span class="number">7</span>de0: ffffffc03e3d7e80 ffffff80082a60dc <span class="number">00000000</span>c008561c <span class="number">00000000e6</span>d23d60</span><br><span class="line">[   <span class="number">62.289357</span>] <span class="number">7e00</span>: <span class="number">000000000000000</span>d ffffffc06e4e2d01 ffffffc06e4e2d00 <span class="number">0000000000000011</span></span><br><span class="line">[   <span class="number">62.298104</span>] <span class="number">7e20</span>: <span class="number">000000000000018</span>a <span class="number">0000000000000036</span> ffffff8008b26000 ffffffc04c723a00</span><br><span class="line">[   <span class="number">62.306854</span>] <span class="number">7e40</span>: ffffffc03e3d7e80 ffffff80082a606c <span class="number">00000000</span>c008561c <span class="number">00000000e6</span>d23d60</span><br><span class="line">[   <span class="number">62.315612</span>] <span class="number">7e60</span>: <span class="number">000000000000000</span>d ffffffc06e4e2d01 <span class="number">0000000000000000</span> <span class="number">00000000000409</span>aa</span><br><span class="line">[   <span class="number">62.324355</span>] <span class="number">7e80</span>: <span class="number">0000000000000000</span> ffffff8008083540 fffffffffffffe88 <span class="number">0000004076749000</span></span><br><span class="line">[   <span class="number">62.333102</span>] <span class="number">7</span>ea0: ffffffffffffffff <span class="number">00000000e80</span>a52a0 <span class="number">0000000080010010</span> <span class="number">0000000000000011</span></span><br><span class="line">[   <span class="number">62.341843</span>] <span class="number">7</span>ec0: <span class="number">000000000000000</span>d <span class="number">00000000</span>c008561c <span class="number">00000000e6</span>d23d60 <span class="number">00000000e6</span>d23d54</span><br><span class="line">[   <span class="number">62.350593</span>] <span class="number">7</span>ee0: <span class="number">00000000e80</span>c5260 <span class="number">0000000000000000</span> <span class="number">00000000e80</span>c5260 <span class="number">0000000000000036</span></span><br><span class="line">[   <span class="number">62.359330</span>] <span class="number">7f</span>00: <span class="number">00000000e6</span>d23e64 <span class="number">00000000e6</span>d23f10 <span class="number">00000000e7</span>b17aac <span class="number">00000000e7</span>b17a88</span><br><span class="line">[   <span class="number">62.368060</span>] <span class="number">7f</span>20: <span class="number">0000000000000000</span> <span class="number">00000000e6</span>d23d40 <span class="number">00000000e807377</span>d <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.376785</span>] <span class="number">7f</span>40: <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.385525</span>] <span class="number">7f</span>60: <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.394279</span>] <span class="number">7f</span>80: <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.403013</span>] <span class="number">7f</span>a0: <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.411771</span>] <span class="number">7f</span>c0: <span class="number">00000000e80</span>a52a0 <span class="number">0000000080010010</span> <span class="number">000000000000000</span>d <span class="number">0000000000000036</span></span><br><span class="line">[   <span class="number">62.420517</span>] <span class="number">7f</span>e0: <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.429263</span>] Call trace:</span><br><span class="line">[   <span class="number">62.431992</span>] <span class="function">Exception <span class="title">stack</span><span class="params">(<span class="number">0xffffffc03e3d77f0</span> to <span class="number">0xffffffc03e3d7920</span>)</span></span></span><br><span class="line">[   62.439183] 77e0:                                   ffffffc07829e148 0000007fffffffff</span><br><span class="line">[   <span class="number">62.447934</span>] <span class="number">7800</span>: <span class="number">00000000415</span>d0000 ffffff8000ba0584 <span class="number">0000000060400145</span> <span class="number">0000000000000001</span></span><br><span class="line">[   <span class="number">62.456667</span>] <span class="number">7820</span>: ffffffc03e3d78f0 ffffff800876343c <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.465417</span>] <span class="number">7840</span>: ffffffc07759ae00 <span class="number">0000000000000000</span> <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.474158</span>] <span class="number">7860</span>: ffffff8000b94b24 ffffffc03e3d78d0 ffffffc03e3d78c0 ffffff8000b94b24</span><br><span class="line">[   <span class="number">62.482907</span>] <span class="number">7880</span>: ffffffc0ffffffff <span class="number">00000000000409</span>aa ffffffc03e3d78b0 ffffff8008b0ce64</span><br><span class="line">[   <span class="number">62.491659</span>] <span class="number">78</span>a0: <span class="number">0000000000000140</span> <span class="number">00000000000409</span>aa <span class="number">0000000000000000</span> <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.500391</span>] <span class="number">78</span>c0: <span class="number">00000000000409</span>aa ffffffc0777e0274 ffffffc03e3d78d0 <span class="number">0000000000000000</span></span><br><span class="line">[   <span class="number">62.509139</span>] <span class="number">78e0</span>: ffffffc07759aec0 ffffff800932df10 <span class="number">0000000000000000</span> <span class="number">00000000e6</span>d23f10</span><br><span class="line">[   <span class="number">62.517877</span>] <span class="number">7900</span>: <span class="number">00000000e7</span>b17aac <span class="number">00000000e7</span>b17a88 <span class="number">0000000000000000</span> <span class="number">00000000e6</span>d23d40</span><br><span class="line">[   <span class="number">62.526687</span>] [&lt;ffffff8000ba0584&gt;] vin_s_ctrl+<span class="number">0x1ec</span>/<span class="number">0x5c8</span> [vin_v4l2]</span><br><span class="line">[   <span class="number">62.533595</span>] [&lt;ffffff800876334c&gt;] try_or_set_cluster+<span class="number">0x1c4</span>/<span class="number">0x368</span></span><br><span class="line">[   <span class="number">62.540215</span>] [&lt;ffffff80087635d8&gt;] set_ctrl+<span class="number">0xe8</span>/<span class="number">0x140</span></span><br><span class="line">[   <span class="number">62.545762</span>] [&lt;ffffff80087636d4&gt;] v4l2_s_ctrl+<span class="number">0xa4</span>/<span class="number">0x110</span></span><br><span class="line">[   <span class="number">62.551590</span>] [&lt;ffffff800875b264&gt;] v4l_s_ctrl+<span class="number">0x74</span>/<span class="number">0x140</span></span><br><span class="line">[   <span class="number">62.557318</span>] [&lt;ffffff80087594e4&gt;] __video_do_ioctl+<span class="number">0x1f4</span>/<span class="number">0x2d8</span></span><br><span class="line">[   <span class="number">62.563734</span>] [&lt;ffffff8008758f28&gt;] video_usercopy+<span class="number">0x2a0</span>/<span class="number">0x618</span></span><br><span class="line">[   <span class="number">62.569961</span>] [&lt;ffffff80087592dc&gt;] video_ioctl2+<span class="number">0x3c</span>/<span class="number">0x50</span></span><br><span class="line">[   <span class="number">62.575809</span>] [&lt;ffffff8008753338&gt;] v4l2_ioctl+<span class="number">0xf8</span>/<span class="number">0x128</span></span><br><span class="line">[   <span class="number">62.581535</span>] [&lt;ffffff800876e350&gt;] v4l2_compat_ioctl32+<span class="number">0x5c8</span>/<span class="number">0x2e30</span></span><br><span class="line">[   <span class="number">62.588338</span>] [&lt;ffffff80082a60dc&gt;] compat_SyS_ioctl+<span class="number">0xbc</span>/<span class="number">0x1d78</span></span><br><span class="line">[   <span class="number">62.594756</span>] [&lt;ffffff8008083540&gt;] el0_svc_naked+<span class="number">0x34</span>/<span class="number">0x38</span></span><br><span class="line">[   <span class="number">62.600680</span>] Code: f9405cc1 <span class="number">910103</span>a2 d2800000 <span class="number">95</span>ef0c2c (f9405ee1) </span><br><span class="line">[   <span class="number">62.607479</span>] ---[ end trace a7c6bf2c66412d17 ]---</span><br><span class="line">[   <span class="number">62.612633</span>] Kernel panic - <span class="keyword">not</span> syncing: Fatal exception</span><br><span class="line">[   <span class="number">62.618454</span>] SMP: stopping secondary CPUs</span><br><span class="line">[   <span class="number">62.622837</span>] Kernel Offset: disabled</span><br><span class="line">[   <span class="number">62.626738</span>] Memory Limit: none</span><br><span class="line">[   <span class="number">62.630149</span>] ---[ end Kernel panic - <span class="keyword">not</span> syncing: Fatal exception</span><br><span class="line">[   <span class="number">62.636850</span>] sunxi dump enabled</span><br><span class="line">[   <span class="number">62.640252</span>] dump regs done</span><br><span class="line">[   <span class="number">62.643307</span>] flush cache done</span><br><span class="line">[   <span class="number">62.646539</span>] crashdump enter</span><br></pre></td></tr></table></figure>
+
+<h2 id="oops信息分析"><a href="#oops信息分析" class="headerlink" title="oops信息分析"></a>oops信息分析</h2><h3 id="1-确定发生问题的地方"><a href="#1-确定发生问题的地方" class="headerlink" title="1. 确定发生问题的地方"></a>1. 确定发生问题的地方</h3><p>由栈回溯信息可以看到，发生的模块是：vin_v4l2</p>
+<h3 id="2-反编译模块，根据dis文件，找到发生错误的指令"><a href="#2-反编译模块，根据dis文件，找到发生错误的指令" class="headerlink" title="2. 反编译模块，根据dis文件，找到发生错误的指令"></a>2. 反编译模块，根据dis文件，找到发生错误的指令</h3><p>由栈回溯信息可以看到，发生的函数时vin_s_ctrl，使用objdump反编译vin_v4l2.ko</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./out/gcc-linaro-5.3.1-2016.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-objdump -D kernel/linux-4.9/drivers/media/platform/sunxi-vin/vin_v4l2.ko &gt; ./vin_v4l2.dis</span><br></pre></td></tr></table></figure>
+
+<p>因此我们在vin_v4l2.dis中搜索此函数，对应的信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">0000000000010398 &lt;vin_s_ctrl&gt;:</span><br><span class="line">...</span><br><span class="line">10570:   540010e1    b.ne    1078c &lt;vin_s_ctrl+0x3f4&gt;</span><br><span class="line">10574:   f9405cc1    ldr x1, [x6,#184]</span><br><span class="line">10578:   910103a2    add x2, x29, #0x40</span><br><span class="line">1057c:   d2800000    mov x0, #0x0                    &#x2F;&#x2F; #0</span><br><span class="line">10580:   94000000    bl  0 &lt;v4l2_s_ctrl&gt;</span><br><span class="line">10584:   f9405ee1    ldr x1, [x23,#184]</span><br><span class="line">10588:   910103a2    add x2, x29, #0x40</span><br><span class="line">1058c:   d2800000    mov x0, #0x0                    &#x2F;&#x2F; #0</span><br><span class="line">10590:   94000000    bl  0 &lt;v4l2_s_ctrl&gt;</span><br><span class="line">10594:   2a0003f4    mov w20, w0</span><br><span class="line">10598:   17ffffcc    b   104c8 &lt;vin_s_ctrl+0x130&gt;</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>知道vin_s_ctrl的函数地址为：<code>0000000000010398</code> ，那么<code>vin_s_ctrl+0x1ec</code>就是<code>0000000000010584</code></p>
+<p>对应指令<code>ldr x1, [x23,#184]</code></p>
+<h3 id="3-分析发生错误的汇编指令"><a href="#3-分析发生错误的汇编指令" class="headerlink" title="3. 分析发生错误的汇编指令"></a>3. 分析发生错误的汇编指令</h3><p><code>ldr x1, [x23,#184]</code> </p>
+<ul>
+<li><p>此汇编指令的意思是将x23寄存器地址偏移184字节后得到的地址上的值写入x1寄存器。</p>
+</li>
+<li><p>根据oops中的信息可以看到，x1 : 0000000000000000，x23: 0000000000000000</p>
+<p><code>ldr x1, [x23,#184]</code> 就变成了 <code>ldr 0000000000000000 [0000000000000000, #184]</code> ` </p>
+<p>在arm64汇编中，x0-x7: 用于子程序调用时的参数传递，x0还用于返回值传递，此处的x1寄存器代表函数的第二个形参。</p>
+</li>
+</ul>
+<h3 id="4-得到对应出错汇编指令对应的C语言代码"><a href="#4-得到对应出错汇编指令对应的C语言代码" class="headerlink" title="4. 得到对应出错汇编指令对应的C语言代码"></a>4. 得到对应出错汇编指令对应的C语言代码</h3><p>将发生错误汇编指令地址<font color=red ><code>0000000000010584 </code></font>，使用addr2line工具得到c语言代码位置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">指令：</span><br><span class="line">./out/gcc-linaro-5.3.1-2016.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-addr2line -e kernel/linux-4.9/drivers/media/platform/sunxi-vin/vin_v4l2.ko -Cf 0000000000010584 vin_s_ctrl</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">结果：</span><br><span class="line">lichee/kernel/linux<span class="number">-4.9</span>/drivers/media/platform/sunxi-vin/vin-video/vin_video.c:<span class="number">2743</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">对应的C代码：</span><br><span class="line">ret = v4l2_s_ctrl(<span class="literal">NULL</span>, flash-&gt;ctrl_handler, &amp;c);</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">v4l2_s_ctrl</span><span class="params">(struct v4l2_fh *fh, struct v4l2_ctrl_handler *hdl,</span></span></span><br><span class="line"><span class="function"><span class="params">                    struct v4l2_control *control)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_ctrl</span> *<span class="title">ctrl</span> = <span class="title">v4l2_ctrl_find</span>(<span class="title">hdl</span>, <span class="title">control</span>-&gt;<span class="title">id</span>);</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_ext_control</span> <span class="title">c</span> = &#123;</span> control-&gt;id &#125;;</span><br><span class="line">    <span class="keyword">int</span> ret; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ctrl == <span class="literal">NULL</span> || !ctrl-&gt;is_int)</span><br><span class="line">        <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ctrl-&gt;flags &amp; V4L2_CTRL_FLAG_READ_ONLY)</span><br><span class="line">        <span class="keyword">return</span> -EACCES;</span><br><span class="line"></span><br><span class="line">    c.value = control-&gt;value;</span><br><span class="line">    ret = set_ctrl_lock(fh, ctrl, &amp;c);</span><br><span class="line">    control-&gt;value = c.value;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(v4l2_s_ctrl);</span><br></pre></td></tr></table></figure>
+
+<p>结合以上分析，因此汇编指令<code>ldr x1, [x23,#184]</code> 代表的意义就是flash-&gt;ctrl_handler的值赋值给v4l2_s_ctrl的第二个形参struct v4l2_ctrl_handler *hdl，</p>
+<p>那么flash-&gt;ctrl_handler的值就是0000000000000000+184，flash的值为0000000000000000，也就是<font color=red>空指针 </font>，再看看flash赋值的地方：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static int vin_s_ctrl(struct v4l2_ctrl *ctrl)</span><br><span class="line">&#123;</span><br><span class="line">    struct vin_vid_cap *cap &#x3D; container_of(ctrl-&gt;handler, struct vin_vid_cap, ctrl_handler);</span><br><span class="line">    struct sensor_instance *inst &#x3D; get_valid_sensor(cap-&gt;vinc);</span><br><span class="line">    struct v4l2_subdev *sensor &#x3D; cap-&gt;pipe.sd[VIN_IND_SENSOR];</span><br><span class="line">    struct v4l2_subdev *flash &#x3D; cap-&gt;pipe.sd[VIN_IND_FLASH];</span><br><span class="line">	....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><font color=red><strong>结论</strong></font>：  struct v4l2_subdev *flash = cap-&gt;pipe.sd[VIN_IND_FLASH]得到的flash为空指针，即系统没有向v4l2注册flash v4l2 子设备。</p>
+</li>
+<li><p><font color=red><strong>PS</strong></font>：</p>
+<ul>
+<li>验证结论，添加打印信息，查看kmsg.</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[   <span class="number">65.974081</span>] [dw9714_act]act subdev_pwdn <span class="number">0</span></span><br><span class="line">[   <span class="number">65.978591</span>] [gc8603_mipi]sensor_init</span><br><span class="line">[   <span class="number">65.983174</span>] [gc8603_mipi]read Sensor_ID [<span class="number">0xF0</span>] = <span class="number">0x80</span></span><br><span class="line">[   <span class="number">65.989254</span>] [gc8603_mipi]read Sensor_ID [<span class="number">0xF1</span>] = <span class="number">0x3</span></span><br><span class="line">[   <span class="number">65.994811</span>] [gc8603_mipi]chip found is an target chip ***********</span><br><span class="line">[   <span class="number">66.001671</span>] flash-&gt;ctrl_handler =           (null)</span><br><span class="line">[   <span class="number">66.007931</span>] [act]ACT_SOFT_PWDN</span><br><span class="line">[   <span class="number">66.011432</span>] [dw9714_act]act subdev_pwdn <span class="number">0</span></span><br><span class="line">[   <span class="number">66.015936</span>] [gc8603_mipi]PWR_OFF!</span><br></pre></td></tr></table></figure>
+
+<p>flash-&gt;ctrl_handler =           (null), 即表明判断正确</p>
+</li>
+</ul>
+
+	  <div>
+      
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>橙子和小果
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://orange.obey.fun/2020/09/15/oops%E5%AE%9E%E4%BE%8B%E5%88%86%E6%9E%90%E4%B9%8B%E4%B8%80/" title="oops实例分析之一">http://orange.obey.fun/2020/09/15/oops实例分析之一/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/10/USB-OTG%E6%A3%80%E6%B5%8B%E5%8E%9F%E7%90%86/" rel="prev" title="USB OTG检测原理">
+      <i class="fa fa-chevron-left"></i> USB OTG检测原理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#oops%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">oops信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oops%E4%BF%A1%E6%81%AF%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">oops信息分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%A1%AE%E5%AE%9A%E5%8F%91%E7%94%9F%E9%97%AE%E9%A2%98%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">2.1.</span> <span class="nav-text">1. 确定发生问题的地方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8F%8D%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9D%97%EF%BC%8C%E6%A0%B9%E6%8D%AEdis%E6%96%87%E4%BB%B6%EF%BC%8C%E6%89%BE%E5%88%B0%E5%8F%91%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E6%8C%87%E4%BB%A4"><span class="nav-number">2.2.</span> <span class="nav-text">2. 反编译模块，根据dis文件，找到发生错误的指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%86%E6%9E%90%E5%8F%91%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4"><span class="nav-number">2.3.</span> <span class="nav-text">3. 分析发生错误的汇编指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%BE%97%E5%88%B0%E5%AF%B9%E5%BA%94%E5%87%BA%E9%94%99%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%AF%B9%E5%BA%94%E7%9A%84C%E8%AF%AD%E8%A8%80%E4%BB%A3%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">4. 得到对应出错汇编指令对应的C语言代码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="橙子和小果"
+      src="/images/pig.jpg">
+  <p class="site-author-name" itemprop="name">橙子和小果</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:nzcvorange@126.com" title="E-Mail → mailto:nzcvorange@126.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">橙子和小果</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">37k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">33 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
